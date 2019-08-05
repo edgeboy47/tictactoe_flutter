@@ -1,22 +1,57 @@
 import 'package:flutter/material.dart';
 
-class Tile extends StatelessWidget {
+class Tile extends StatefulWidget {
   final String val;
   final Function onClick;
 
   Tile({this.val, this.onClick});
 
   @override
+  _TileState createState() => _TileState();
+}
+
+class _TileState extends State<Tile> with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        AnimationController(duration: Duration(seconds: 4), vsync: this);
+
+    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller)
+    ..addListener((){
+      setState((){});
+    })
+    ..addStatusListener((state) => print("$state"));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // _controller.forward();
+
     return Container(
       margin: EdgeInsets.all(5.0),
       child: RaisedButton(
-        onPressed: this.onClick,
+        onPressed: () {
+          widget.onClick();
+          _controller.forward(from: 0.0);
+        },
         child: Container(
           child: Center(
-            child: Text(
-              "$val",
-              style: TextStyle(fontSize: 40.0),
+            child: FadeTransition(
+              opacity: _animation,
+              child: Text(
+                "${widget.val}",
+                style: TextStyle(fontSize: 40.0),
+              ),
             ),
           ),
           width: 80.0,
