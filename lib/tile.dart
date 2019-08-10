@@ -23,8 +23,7 @@ class _TileState extends State<Tile> with SingleTickerProviderStateMixin {
     _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller)
     ..addListener((){
       setState((){});
-    })
-    ..addStatusListener((state) => print("$state"));
+    });
   }
 
   @override
